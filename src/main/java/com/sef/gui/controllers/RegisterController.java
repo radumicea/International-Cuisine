@@ -4,10 +4,10 @@ import com.sef.gui.GUI;
 import java.io.IOException;
 import javafx.fxml.FXML;
 
-public class SecondaryController {
+public class RegisterController {
 
   @FXML
-  private void switchToPrimary() throws IOException {
-    GUI.setRoot("primary");
+  private void switchToSecondary() throws IOException {
+    GUI.setRoot("register");
   }
 }
