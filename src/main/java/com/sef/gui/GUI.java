@@ -13,7 +13,8 @@ public class GUI extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFXML("register"), 640, 480);
+    scene = new Scene(loadFXML("login"), 1600, 900);
+    stage.setTitle("International Cuisine");
     stage.setScene(scene);
     stage.show();
   }

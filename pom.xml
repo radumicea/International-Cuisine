@@ -77,6 +77,11 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>prettier-maven-plugin</artifactId>
+        <version>1.6.1</version>
+      </plugin>
     </plugins>
   </build>
 </project>
