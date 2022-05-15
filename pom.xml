@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>international_cuisine</name>
-    <url>https://github.com/sinisconi2002/International-Cuisine</url>
+    <url>https://github.com/radumicea/International-Cuisine</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
