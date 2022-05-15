@@ -3,7 +3,7 @@ module com.sef {
   requires javafx.fxml;
   requires com.fasterxml.jackson.databind;
 
-  opens com.sef.gui to javafx.graphics;
-  opens com.sef.gui.controllers to javafx.fxml;
+  opens com.sef to javafx.graphics;
+  opens com.sef.controllers to javafx.fxml;
   exports com.sef ;
 }

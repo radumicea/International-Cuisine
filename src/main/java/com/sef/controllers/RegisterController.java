@@ -1,6 +1,6 @@
-package com.sef.gui.controllers;
+package com.sef.controllers;
 
-import com.sef.gui.GUI;
+import com.sef.App;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -54,6 +54,6 @@ public class RegisterController {
 
   @FXML
   private void switchToLogin() throws IOException {
-    GUI.setRoot("login");
+    App.setRoot("login");
   }
 }
