@@ -1,5 +1,6 @@
 package com.sef.frontend.controllers;
 
+import com.sef.backend.controllers.UserController;
 import com.sef.frontend.GUI;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -8,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class LoginController {
+
+  public static String loggedUser;
 
   @FXML
   public Text loginMessage;
@@ -18,7 +21,7 @@ public class LoginController {
   @FXML
   public TextField usernameField;
 
-  private String loggedUser;
+  private final UserController userController = new UserController();
 
   @FXML
   public void handleLoginButtonAction() {
@@ -31,25 +34,17 @@ public class LoginController {
     }
 
     if (password == null || password.isEmpty()) {
-      loginMessage.setText("Password cannot be empty");
+      loginMessage.setText("Password cannot be empty.");
       return;
     }
 
-    // TODO: Handle login
-
-    if (username.equals("member") && password.equals("member")) {
-      loginMessage.setText("Logged in as member!");
-      loggedUser = username;
+    if (!userController.logUserIn(username, password)) {
+      loginMessage.setText("Incorrect login.");
       return;
     }
 
-    if (username.equals("admin") && password.equals("admin")) {
-      loginMessage.setText("Logged in as admin!");
-      loggedUser = username;
-      return;
-    }
-
-    loginMessage.setText("Incorrect login!");
+    loggedUser = username;
+    loginMessage.setText("Successfully logged in!");
   }
 
   @FXML

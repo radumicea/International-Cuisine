@@ -1,5 +1,6 @@
 package com.sef.frontend.controllers;
 
+import com.sef.backend.services.UserService;
 import com.sef.frontend.GUI;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -21,6 +22,8 @@ public class RegisterController {
   @FXML
   public TextField usernameField;
 
+  private final UserService userService = new UserService();
+
   @FXML
   public void handleRegisterButtonAction() {
     String username = usernameField.getText();
@@ -32,13 +35,25 @@ public class RegisterController {
       return;
     }
 
+    if (
+      userService
+        .getUsers()
+        .stream()
+        .filter(u -> u.username.equals(username))
+        .findFirst()
+        .isPresent()
+    ) {
+      registerMessage.setText("Username already exists!");
+      return;
+    }
+
     if (password == null || password.isEmpty()) {
-      registerMessage.setText("Password cannot be empty");
+      registerMessage.setText("Password cannot be empty.");
       return;
     }
 
     if (passwordConfirm == null || passwordConfirm.isEmpty()) {
-      registerMessage.setText("Please confirm the password");
+      registerMessage.setText("Please confirm the password.");
       return;
     }
 
@@ -47,7 +62,9 @@ public class RegisterController {
       return;
     }
 
-    // TODO: handle register
+    if (!userService.registerUser(username, password)) {
+      registerMessage.setText("Registration failed.");
+    }
 
     registerMessage.setText("Registration was successful!");
   }
