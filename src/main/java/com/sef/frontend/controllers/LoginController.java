@@ -1,6 +1,6 @@
-package com.sef.controllers;
+package com.sef.frontend.controllers;
 
-import com.sef.App;
+import com.sef.frontend.GUI;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -18,7 +18,7 @@ public class LoginController {
   @FXML
   public TextField usernameField;
 
-  private String userName;
+  private String loggedUser;
 
   @FXML
   public void handleLoginButtonAction() {
@@ -39,13 +39,13 @@ public class LoginController {
 
     if (username.equals("member") && password.equals("member")) {
       loginMessage.setText("Logged in as member!");
-      userName = username;
+      loggedUser = username;
       return;
     }
 
     if (username.equals("admin") && password.equals("admin")) {
       loginMessage.setText("Logged in as admin!");
-      userName = username;
+      loggedUser = username;
       return;
     }
 
@@ -54,10 +54,10 @@ public class LoginController {
 
   @FXML
   private void switchToRegister() throws IOException {
-    App.setRoot("register");
+    GUI.setRoot("register");
   }
 
   public String getUserName() {
-    return userName;
+    return loggedUser;
   }
 }

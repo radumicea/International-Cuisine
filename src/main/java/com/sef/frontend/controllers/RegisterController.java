@@ -1,6 +1,6 @@
-package com.sef.controllers;
+package com.sef.frontend.controllers;
 
-import com.sef.App;
+import com.sef.frontend.GUI;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -47,13 +47,13 @@ public class RegisterController {
       return;
     }
 
-    // TODO: unique user names and handle logins
+    // TODO: handle register
 
     registerMessage.setText("Registration was successful!");
   }
 
   @FXML
   private void switchToLogin() throws IOException {
-    App.setRoot("login");
+    GUI.setRoot("login");
   }
 }
