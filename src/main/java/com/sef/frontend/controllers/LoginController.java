@@ -10,8 +10,6 @@ import javafx.scene.text.Text;
 
 public class LoginController {
 
-  public static String loggedUser;
-
   @FXML
   public Text loginMessage;
 
@@ -38,21 +36,18 @@ public class LoginController {
       return;
     }
 
-    if (!userController.logUserIn(username, password)) {
-      loginMessage.setText("Incorrect login.");
-      return;
+    int loginStatus = userController.logUserIn(username, password);
+    if (loginStatus == -1) {
+      loginMessage.setText("Login failed!");
+    } else if (loginStatus == 1) {
+      loginMessage.setText("Incorrect username or password.");
+    } else {
+      loginMessage.setText("Successfully logged in!");
     }
-
-    loggedUser = username;
-    loginMessage.setText("Successfully logged in!");
   }
 
   @FXML
   private void switchToRegister() throws IOException {
     GUI.setRoot("register");
-  }
-
-  public String getUserName() {
-    return loggedUser;
   }
 }
