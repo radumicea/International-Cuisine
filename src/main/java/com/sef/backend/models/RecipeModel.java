@@ -10,7 +10,7 @@ public class RecipeModel {
   private String country;
   private String description;
   private Set<String> tags;
-  private byte[] image;
+  private String image;
 
   public RecipeModel(
     String name,
@@ -22,8 +22,8 @@ public class RecipeModel {
     this.name = name;
     this.description = description;
     this.country = country;
-    this.tags = new HashSet<>(Arrays.asList(tags.split(", ")));
-    this.image = image.getBytes();
+    this.tags = new HashSet<>(Arrays.asList(tags.split(",")));
+    this.image = image;
   }
 
   public String getName() {
@@ -63,10 +63,10 @@ public class RecipeModel {
   }
 
   public String getImage() {
-    return new String(image);
+    return image;
   }
 
   public void setImage(String image) {
-    this.image = image.getBytes();
+    this.image = image;
   }
 }

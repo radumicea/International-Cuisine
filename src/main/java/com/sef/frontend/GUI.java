@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 public class GUI extends Application {
 
   private static Scene scene;
+  public static Stage stage;
 
   @Override
   public void start(Stage stage) throws IOException {
@@ -17,6 +18,7 @@ public class GUI extends Application {
     stage.setTitle("International Cuisine");
     stage.setScene(scene);
     stage.show();
+    GUI.stage = stage;
   }
 
   public static void setRoot(String fxml) throws IOException {
