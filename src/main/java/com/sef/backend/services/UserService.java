@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Projections;
 import com.sef.backend.managers.HashManager;
 import com.sef.backend.models.RecipeModel;
@@ -33,7 +34,9 @@ public class UserService implements IUserService {
     try {
       MongoCollection<Document> users = mongoClient
         .getDatabase("InternationalCuisine")
-        .getCollection("Users");
+          .getCollection("Users");
+        
+      users.createIndex(Indexes.ascending("username"));
 
       Bson projectionFields = Projections.fields(
         Projections.include("username"),
@@ -87,7 +90,7 @@ public class UserService implements IUserService {
       String hashedPassword = user.get("password", String.class);
 
       if (hashManager.checkPassword(hashedPassword, password)) {
-        userSession.id = user.get("_id", ObjectId.class);
+        userSession.userId = user.get("_id", ObjectId.class);
         return 0;
       } else {
         return 1;
