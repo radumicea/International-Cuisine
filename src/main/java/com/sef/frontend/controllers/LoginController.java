@@ -22,7 +22,7 @@ public class LoginController {
   private final UserController userController = new UserController();
 
   @FXML
-  public void handleLoginButtonAction() {
+  public void handleLoginButtonAction() throws IOException {
     String username = usernameField.getText();
     String password = passwordField.getText();
 
@@ -43,6 +43,7 @@ public class LoginController {
       loginMessage.setText("Incorrect username or password.");
     } else {
       loginMessage.setText("Successfully logged in!");
+      GUI.setRoot("main");
     }
   }
 

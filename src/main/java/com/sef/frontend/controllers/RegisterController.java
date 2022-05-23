@@ -25,7 +25,7 @@ public class RegisterController {
   private final UserController userController = new UserController();
 
   @FXML
-  public void handleRegisterButtonAction() {
+  public void handleRegisterButtonAction() throws IOException {
     String username = usernameField.getText();
     String password = passwordField.getText();
     String passwordConfirm = passwordConfirmField.getText();
@@ -58,6 +58,7 @@ public class RegisterController {
       registerMessage.setText("Username is already taken!");
     } else {
       registerMessage.setText("Registration was successful!");
+      switchToLogin();
     }
   }
 
