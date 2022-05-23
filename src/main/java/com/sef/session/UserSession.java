@@ -6,7 +6,7 @@ public class UserSession {
 
   private static final UserSession userSession = new UserSession();
 
-  public ObjectId id;
+  public ObjectId userId;
 
   private UserSession() {}
 
