@@ -6,32 +6,32 @@ import java.util.Set;
 
 public class RecipeModel {
 
-  private String name;
+  private String recipeName;
   private String country;
   private String description;
   private Set<String> tags;
   private String image;
 
   public RecipeModel(
-    String name,
+    String recipeName,
     String description,
     String country,
     String tags,
     String image
   ) {
-    this.name = name;
+    this.recipeName = recipeName;
     this.description = description;
     this.country = country;
     this.tags = new HashSet<>(Arrays.asList(tags.split(",")));
     this.image = image;
   }
 
-  public String getName() {
-    return name;
+  public String getRecipeName() {
+    return recipeName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setRecipeName(String recipeName) {
+    this.recipeName = recipeName;
   }
 
   public String getCountry() {

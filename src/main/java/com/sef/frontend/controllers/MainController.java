@@ -3,65 +3,124 @@ package com.sef.frontend.controllers;
 import com.sef.backend.controllers.RecipeController;
 import com.sef.backend.models.RecipeModel;
 import com.sef.frontend.GUI;
-import java.io.File;
+import com.sef.session.UserSession;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Base64;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 
-// import com.sef.backend.models.Country;
-// import com.sef.backend.models.RecipeModel;
-// import java.util.List;
-// import javafx.fxml.FXML;
-// import javafx.scene.control.TableColumn;
-// import javafx.scene.control.TableView;
-// import javafx.scene.image.Image;
-
-public class MainController {
-
-  //   @FXML
-  //   private TableView<RecipeModel> recipeTable;
-
-  //   @FXML
-  //   private TableColumn<RecipeModel, String> nameColumn;
-
-  //   @FXML
-  //   private TableColumn<RecipeModel, Country> CountryColumn;
-
-  //   @FXML
-  //   private TableColumn<RecipeModel, String> descriptionColumn;
-
-  //   @FXML
-  //   private TableColumn<RecipeModel, List<String>> tagsColumn;
-
-  //   @FXML
-  //   private TableColumn<RecipeModel, Image> imageColumn;
-
-  private static final long _512KB = 512 * 1024;
+public class MainController implements Initializable {
 
   private final RecipeController recipeController = new RecipeController();
+  private final UserSession userSession = UserSession.getUserSession();
+
+  private boolean isGlobal;
+
+  private int globalFrom;
+  private int globalTo;
+
+  private int localFrom;
+  private int localTo;
 
   @FXML
-  private Text message;
+  private TableView<RecipeModel> recipeTable;
 
   @FXML
-  private TextField nameField;
+  private TableColumn<RecipeModel, String> recipeNameColumn;
 
   @FXML
-  private TextField countryField;
+  private TableColumn<RecipeModel, String> countryColumn;
 
   @FXML
-  private TextField descriptionField;
+  private TableColumn<RecipeModel, String> descriptionColumn;
 
   @FXML
-  private TextField tagsField;
+  private TableColumn<RecipeModel, List<String>> tagsColumn;
 
-  private String image = "";
+  @FXML
+  private TableColumn<RecipeModel, Image> imageColumn;
+
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    recipeNameColumn.setCellValueFactory(
+      new PropertyValueFactory<>("recipeName")
+    );
+
+    countryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+
+    descriptionColumn.setCellValueFactory(
+      new PropertyValueFactory<>("description")
+    );
+
+    tagsColumn.setCellValueFactory(new PropertyValueFactory<>("tags"));
+
+    imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+
+    initializeGlobal();
+  }
+
+  private void initializeGlobal() {
+    isGlobal = true;
+
+    globalFrom = 0;
+    globalTo = 5;
+    updateGlobalTable();
+  }
+
+  private void initializeLocal() {
+    isGlobal = false;
+
+    localFrom = 0;
+    localTo = 5;
+    updateLocalTable();
+  }
+
+  private final void updateGlobalTable() {
+    List<RecipeModel> globalRecipes = recipeController.getFromToRecipes(
+      globalFrom,
+      globalTo
+    );
+    globalFrom = globalTo;
+    globalTo = globalFrom + 5;
+
+    System.out.println(globalRecipes);
+
+    recipeTable.getItems().clear();
+    recipeTable.getItems().addAll(globalRecipes);
+  }
+
+  private final void updateLocalTable() {
+    List<RecipeModel> localRecipes = recipeController.getUserFromToRecipes(
+      userSession.userId,
+      localFrom,
+      localTo
+    );
+    if (localRecipes == null) {
+      return;
+    }
+    localFrom = localTo;
+    localTo = localFrom + 5;
+
+    System.out.println(localRecipes);
+
+    recipeTable.getItems().clear();
+    recipeTable.getItems().addAll(localRecipes);
+  }
+
+  @FXML
+  public void handleNextButtonAction() {
+    if (isGlobal) {
+      updateGlobalTable();
+    } else {
+      updateLocalTable();
+    }
+  }
 
   @FXML
   public void handleAddRecipeButtonAction() throws IOException {
@@ -69,48 +128,12 @@ public class MainController {
   }
 
   @FXML
-  public void handleSaveButtonAction() throws IOException {
-    recipeController.addRecipe(
-      new RecipeModel(
-        nameField.getText(),
-        descriptionField.getText(),
-        countryField.getText(),
-        tagsField.getText(),
-        image
-      )
-    );
-
-    image = "";
+  public void handleMyRecipesButtonAction() {
+    initializeLocal();
   }
 
   @FXML
-  void handleCancelButtonAction() throws IOException {
-    GUI.setRoot("main");
-  }
-
-  @FXML
-  void handleChooseImageButtonAction() throws IOException {
-    FileChooser fc = new FileChooser();
-    fc.setTitle("Open Image");
-    fc
-      .getExtensionFilters()
-      .addAll(
-        new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-        new ExtensionFilter("All Files", "*.*")
-      );
-    File file = fc.showOpenDialog(GUI.stage);
-    if (file == null) {
-      return;
-    }
-
-    if (file.length() > _512KB) {
-      message.setText("Image size exceeds 512KB!");
-      return;
-    }
-
-    image =
-      Base64
-        .getEncoder()
-        .encodeToString(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+  public void handleHomeButtonAction() {
+    initialize(null, null);
   }
 }

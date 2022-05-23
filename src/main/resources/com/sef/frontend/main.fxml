@@ -4,18 +4,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 
-<GridPane
-  maxHeight="-Infinity"
-  maxWidth="-Infinity"
-  minHeight="-Infinity"
-  minWidth="-Infinity"
-  prefHeight="400.0"
-  prefWidth="600.0"
-  xmlns:fx="http://javafx.com/fxml/1"
-  xmlns="http://javafx.com/javafx/18"
-  fx:controller="com.sef.frontend.controllers.MainController"
->
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sef.frontend.controllers.MainController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -33,11 +25,18 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
   <children>
-    <Button
-      mnemonicParsing="false"
-      onAction="#handleAddRecipeButtonAction"
-      text="Add Recipe"
-      GridPane.columnIndex="6"
-    />
+    <TableView fx:id="recipeTable" layoutX="146.0" layoutY="159.0" prefHeight="357.0" prefWidth="511.0" style="-fx-background-color: #f6eef6;">
+      <columns>
+        <TableColumn fx:id="recipeNameColumn" prefWidth="103.55563354492188" text="Recipe Name" />
+        <TableColumn fx:id="countryColumn" prefWidth="75.55558776855469" text="Country" />
+          <TableColumn fx:id="descriptionColumn" prefWidth="127.111083984375" text="Description" />
+          <TableColumn fx:id="tagsColumn" prefWidth="82.88888549804688" text="Tags" />
+          <TableColumn fx:id="imageColumn" prefWidth="113.77777099609375" text="Image" />
+      </columns>
+    </TableView>
+    <Button mnemonicParsing="false" onAction="#handleAddRecipeButtonAction" text="Add Recipe" GridPane.columnIndex="6" />
+      <Button mnemonicParsing="false" onAction="#handleMyRecipesButtonAction" text="My Recipes" GridPane.columnIndex="5" />
+      <Button mnemonicParsing="false" onAction="#handleNextButtonAction" text="Next Page" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+      <Button mnemonicParsing="false" onAction="#handleHomeButtonAction" text="Go Home" GridPane.columnIndex="5" GridPane.rowIndex="4" />
   </children>
 </GridPane>
