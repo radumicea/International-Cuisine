@@ -9,7 +9,7 @@ module com.sef {
 
   opens com.sef.frontend to javafx.graphics;
   opens com.sef.frontend.controllers to javafx.fxml;
-  opens com.sef.backend.models to com.fasterxml.jackson.databind;
+  opens com.sef.backend.models to com.fasterxml.jackson.databind, javafx.base;
 
   exports com.sef ;
 }
