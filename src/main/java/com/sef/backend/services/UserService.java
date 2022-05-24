@@ -30,7 +30,7 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public int registerUser(String username, String password, boolean isAdmin) {
+  public int registerUser(String username, String password) {
     try {
       MongoCollection<Document> users = mongoClient
         .getDatabase("InternationalCuisine")
@@ -57,7 +57,7 @@ public class UserService implements IUserService {
           .append("_id", new ObjectId())
           .append("username", username)
           .append("password", hashManager.hashPassword(password))
-          .append("isAdmin", isAdmin)
+          .append("isAdmin", false)
           .append("recipes", new ArrayList<RecipeModel>())
       );
 

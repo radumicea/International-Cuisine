@@ -50,7 +50,7 @@ public class RegisterController {
       return;
     }
 
-    int registerStatus = userController.registerUser(username, password, false);
+    int registerStatus = userController.registerUser(username, password);
 
     if (registerStatus == -1) {
       registerMessage.setText("Registration failed.");
