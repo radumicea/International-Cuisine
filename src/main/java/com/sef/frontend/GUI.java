@@ -15,6 +15,7 @@ public class GUI extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     scene = new Scene(loadFXML("login"), 1280, 720);
+    stage.setResizable(false);
     stage.setTitle("International Cuisine");
     stage.setScene(scene);
     stage.show();

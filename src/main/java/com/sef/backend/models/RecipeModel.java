@@ -1,37 +1,33 @@
 package com.sef.backend.models;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 public class RecipeModel {
 
-  private String name;
+  private String recipeName;
   private String country;
   private String description;
-  private Set<String> tags;
+  private String tags;
   private String image;
 
   public RecipeModel(
-    String name,
-    String description,
+    String recipeName,
     String country,
+    String description,
     String tags,
     String image
   ) {
-    this.name = name;
+    this.recipeName = recipeName;
     this.description = description;
     this.country = country;
-    this.tags = new HashSet<>(Arrays.asList(tags.split(",")));
+    this.tags = tags;
     this.image = image;
   }
 
-  public String getName() {
-    return name;
+  public String getRecipeName() {
+    return recipeName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setRecipeName(String recipeName) {
+    this.recipeName = recipeName;
   }
 
   public String getCountry() {
@@ -51,15 +47,11 @@ public class RecipeModel {
   }
 
   public String getTags() {
-    return String.join(", ", tags);
+    return tags;
   }
 
   public void setTags(String tags) {
-    this.tags = new HashSet<>(Arrays.asList(tags.split(", ")));
-  }
-
-  public boolean addTags(String tag) {
-    return tags.add(tag);
+    this.tags = tags;
   }
 
   public String getImage() {
