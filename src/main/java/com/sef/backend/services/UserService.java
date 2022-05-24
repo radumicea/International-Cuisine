@@ -8,7 +8,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Projections;
 import com.sef.backend.managers.HashManager;
-import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
 import org.bson.Document;
@@ -34,8 +33,8 @@ public class UserService implements IUserService {
     try {
       MongoCollection<Document> users = mongoClient
         .getDatabase("InternationalCuisine")
-          .getCollection("Users");
-        
+        .getCollection("Users");
+
       users.createIndex(Indexes.ascending("username"));
 
       Bson projectionFields = Projections.fields(
@@ -63,6 +62,7 @@ public class UserService implements IUserService {
 
       return 0;
     } catch (Exception e) {
+      e.printStackTrace();
       return -1;
     }
   }
@@ -96,6 +96,7 @@ public class UserService implements IUserService {
         return 1;
       }
     } catch (Exception e) {
+      e.printStackTrace();
       return -1;
     }
   }
