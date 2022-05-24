@@ -8,4 +8,5 @@ public interface IRecipeService {
   int addRecipe(RecipeModel recipe);
   List<RecipeModel> getFromToRecipes(int from, int to);
   List<RecipeModel> getUserFromToRecipes(ObjectId userId, int from, int to);
+  void refresh();
 }

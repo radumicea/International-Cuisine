@@ -30,7 +30,7 @@
     <Button mnemonicParsing="false" onAction="#handleChooseImageButtonAction" text="Choose image" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe Name" wrappingWidth="150.13671875" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="154.13671875" GridPane.rowIndex="1" />
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags (separated by &quot;,&quot;)" wrappingWidth="153.33673095703125" GridPane.rowIndex="3" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags" wrappingWidth="153.33673095703125" GridPane.rowIndex="3" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Image" wrappingWidth="154.936767578125" GridPane.rowIndex="4" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Country" GridPane.rowIndex="2" />
     <Text fx:id="message" GridPane.columnIndex="1" GridPane.rowIndex="3" />

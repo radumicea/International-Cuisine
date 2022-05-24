@@ -25,4 +25,8 @@ public class RecipeController {
   ) {
     return recipeService.getUserFromToRecipes(userId, from, to);
   }
+
+  public void refresh() {
+    recipeService.refresh();
+  }
 }

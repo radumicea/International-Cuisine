@@ -2,6 +2,7 @@ package com.sef.backend.services;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -18,15 +19,18 @@ import org.bson.types.ObjectId;
 
 public class RecipeService implements IRecipeService {
 
-  private final MongoClient mongoClient;
+  private final MongoClient mongoClient = MongoClients.create(
+    "mongodb+srv://boss:ILoveMongo@maincluster.0aihe.mongodb.net/test"
+  );
   private final UserSession userSession = UserSession.getUserSession();
 
-  public RecipeService() {
-    mongoClient =
-      MongoClients.create(
-        "mongodb+srv://boss:ILoveMongo@maincluster.0aihe.mongodb.net/test"
-      );
-  }
+  private MongoCollection<Document> cachedUsers = mongoClient
+    .getDatabase("InternationalCuisine")
+    .getCollection("Users");
+
+  private MongoCollection<Document> cachedRecipes = mongoClient
+    .getDatabase("InternationalCuisine")
+    .getCollection("Recipes");
 
   @Override
   public int addRecipe(RecipeModel recipe) {
@@ -54,20 +58,24 @@ public class RecipeService implements IRecipeService {
   }
 
   @Override
+  public void refresh() {
+    cachedUsers =
+      mongoClient.getDatabase("InternationalCuisine").getCollection("Users");
+
+    cachedRecipes =
+      mongoClient.getDatabase("InternationalCuisine").getCollection("Recipes");
+  }
+
+  @Override
   public List<RecipeModel> getFromToRecipes(int from, int to) {
     try {
-      MongoCollection<Document> recipes = mongoClient
-        .getDatabase("InternationalCuisine")
-        .getCollection("Recipes");
+      List<RecipeModel> recipeList = new ArrayList<>();
 
-      // Bson projection = Projections.fields(
-      //   Projections.include("recipeName", "description", "country", "tags", "iamge"),
-      //   Projections.excludeId()
-      // );
-
-      ArrayList<RecipeModel> recipeList = new ArrayList<>();
-
-      FindIterable<Document> docs = recipes.find()/*.projection(projection)*/.skip(from).limit(to);
+      FindIterable<Document> docs = cachedRecipes
+        .find()
+        .sort(new BasicDBObject("_id", -1))
+        .skip(from)
+        .limit(to);
 
       for (Document doc : docs) {
         recipeList.add(documentToRecipe(doc));
@@ -88,15 +96,11 @@ public class RecipeService implements IRecipeService {
     int to
   ) {
     try {
-      MongoCollection<Document> users = mongoClient
-        .getDatabase("InternationalCuisine")
-        .getCollection("Users");
-
       Bson projectionFields = Projections.fields(
         Projections.include("recipes")
       );
 
-      Document user = users
+      Document user = cachedUsers
         .find(eq("_id", userId))
         .projection(projectionFields)
         .first();
@@ -105,12 +109,18 @@ public class RecipeService implements IRecipeService {
         return null;
       }
 
-      List<RecipeModel> recipes = user.get("recipes", List.class);
-      if (from >= recipes.size()) {
+      List<Document> documents = user.get("recipes", List.class);
+      if (from >= documents.size()) {
         return null;
       }
+      documents = documents.subList(from, Math.min(to, documents.size()));
 
-      return recipes.subList(from, Math.min(to, recipes.size()));
+      List<RecipeModel> recipes = new ArrayList<>();
+      for (Document doc : documents) {
+        recipes.add(documentToRecipe(doc));
+      }
+
+      return recipes;
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -121,8 +131,8 @@ public class RecipeService implements IRecipeService {
     return new Document()
       .append("_id", new ObjectId())
       .append("recipeName", recipe.getRecipeName())
-      .append("description", recipe.getDescription())
       .append("country", recipe.getCountry())
+      .append("description", recipe.getDescription())
       .append("tags", recipe.getTags())
       .append("image", recipe.getImage());
   }
@@ -130,8 +140,8 @@ public class RecipeService implements IRecipeService {
   private static RecipeModel documentToRecipe(Document document) {
     return new RecipeModel(
       document.get("recipeName", String.class),
-      document.get("description", String.class),
       document.get("country", String.class),
+      document.get("description", String.class),
       document.get("tags", String.class),
       document.get("image", String.class)
     );
