@@ -1,10 +1,11 @@
 package com.sef.backend.controllers;
 
+import com.sef.backend.services.IUserService;
 import com.sef.backend.services.UserService;
 
 public class UserController {
 
-  private final UserService userService = new UserService();
+  private final IUserService userService = new UserService();
 
   public int registerUser(String username, String password, boolean isAdmin) {
     return userService.registerUser(username, password, isAdmin);
