@@ -24,15 +24,15 @@
     <Button mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="5" />
     <Button mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" GridPane.rowIndex="5" />
     <TextField fx:id="recipeNameField" GridPane.columnIndex="1" />
-    <TextField fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <TextField fx:id="countryField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <TextField fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <TextField fx:id="countryField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     <TextField fx:id="tagsField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
     <Button mnemonicParsing="false" onAction="#handleChooseImageButtonAction" text="Choose image" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe Name" wrappingWidth="150.13671875" />
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="154.13671875" GridPane.rowIndex="1" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="154.13671875" GridPane.rowIndex="2" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags" wrappingWidth="153.33673095703125" GridPane.rowIndex="3" />
     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Image" wrappingWidth="154.936767578125" GridPane.rowIndex="4" />
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Country" GridPane.rowIndex="2" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Country" GridPane.rowIndex="1" />
     <Text fx:id="message" GridPane.columnIndex="1" GridPane.rowIndex="3" />
   </children>
 </GridPane>

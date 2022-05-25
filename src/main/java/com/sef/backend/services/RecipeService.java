@@ -9,6 +9,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.PushOptions;
 import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
@@ -43,9 +44,13 @@ public class RecipeService implements IRecipeService {
         .getDatabase("InternationalCuisine")
         .getCollection("Recipes");
 
+      PushOptions pushOptions = new PushOptions();
+      List<Document> list = new ArrayList<>();
+      list.add(recipeToDocument(recipe));
+
       users.updateOne(
         eq("_id", userSession.userId),
-        addToSet("recipes", recipeToDocument(recipe))
+        pushEach("recipes", list, pushOptions.position(0))
       );
 
       recipes.insertOne(recipeToDocument(recipe));
@@ -84,6 +89,7 @@ public class RecipeService implements IRecipeService {
         )
       );
 
+      System.out.println("finished");
       return 0;
     } catch (Exception e) {
       e.printStackTrace();
