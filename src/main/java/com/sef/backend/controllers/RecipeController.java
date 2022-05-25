@@ -14,6 +14,10 @@ public class RecipeController {
     return recipeService.addRecipe(recipe);
   }
 
+  public int addFavouriteRecipe(RecipeModel recipe) {
+    return recipeService.addFavouriteRecipe(recipe);
+  }
+
   public int updateRecipe(RecipeModel recipe) {
     return recipeService.updateRecipe(recipe);
   }
@@ -28,6 +32,14 @@ public class RecipeController {
     int to
   ) {
     return recipeService.getUserFromToRecipes(userId, from, to);
+  }
+
+  public List<RecipeModel> getFavouriteFromToRecipes(
+          ObjectId userId,
+          int from,
+          int to
+  ) {
+    return recipeService.getFavouriteFromToRecipes(userId, from, to);
   }
 
   public void refresh() {

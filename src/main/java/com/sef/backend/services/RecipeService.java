@@ -10,6 +10,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.PushOptions;
+import com.mongodb.client.model.Updates;
 import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
@@ -54,6 +55,25 @@ public class RecipeService implements IRecipeService {
       );
 
       recipes.insertOne(recipeToDocument(recipe));
+
+      return 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  @Override
+  public int addFavouriteRecipe(RecipeModel recipe) {
+    try {
+      MongoCollection<Document> users = mongoClient
+              .getDatabase("InternationalCuisine")
+              .getCollection("Users");
+
+      users.updateOne(
+              eq("_id", userSession.userId),
+              Updates.addToSet("favourites", recipeToDocument(recipe))
+      );
 
       return 0;
     } catch (Exception e) {
@@ -140,6 +160,40 @@ public class RecipeService implements IRecipeService {
       }
 
       return recipeList;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public List<RecipeModel> getFavouriteFromToRecipes(ObjectId userId, int from, int to) {
+    try {
+      Bson projectionFields = Projections.fields(
+              Projections.include("favourites")
+      );
+
+      Document user = cachedUsers
+              .find(eq("_id", userId))
+              .projection(projectionFields)
+              .first();
+
+      if (user == null) {
+        return null;
+      }
+
+      List<Document> documents = user.get("favourites", List.class);
+      if (from >= documents.size()) {
+        return null;
+      }
+      documents = documents.subList(from, Math.min(to, documents.size()));
+
+      List<RecipeModel> recipes = new ArrayList<>();
+      for (Document doc : documents) {
+        recipes.add(documentToRecipe(doc));
+      }
+
+      return recipes;
     } catch (Exception e) {
       e.printStackTrace();
       return null;
