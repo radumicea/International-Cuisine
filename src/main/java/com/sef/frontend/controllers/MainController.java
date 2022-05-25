@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.bson.types.ObjectId;
 
 public class MainController implements Initializable {
 
@@ -43,6 +44,9 @@ public class MainController implements Initializable {
   private TableView<RecipeModel> recipeTable;
 
   @FXML
+  private TableColumn<RecipeModel, ObjectId> recipeIdColumn;
+
+  @FXML
   private TableColumn<RecipeModel, String> recipeNameColumn;
 
   @FXML
@@ -59,6 +63,7 @@ public class MainController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    recipeIdColumn.setCellValueFactory(new PropertyValueFactory<>("recipeId"));
     recipeNameColumn.setCellValueFactory(
       new PropertyValueFactory<>("recipeName")
     );
@@ -172,6 +177,7 @@ public class MainController implements Initializable {
 
   @FXML
   public void handleAddRecipeButtonAction() throws IOException {
+    RecipeViewController.selectedRecipe = null;
     GUI.setRoot("recipe_view");
   }
 
@@ -185,5 +191,23 @@ public class MainController implements Initializable {
   public void handleHomeButtonAction() {
     recipeController.refresh();
     initializeGlobal();
+  }
+
+  @FXML
+  public void handleEditRecipeButtonAction() throws IOException {
+    if (isGlobal) {
+      return;
+    }
+
+    RecipeModel selectedRecipe = recipeTable
+      .getSelectionModel()
+      .getSelectedItem();
+
+    if (selectedRecipe == null) {
+      return;
+    }
+
+    RecipeViewController.selectedRecipe = selectedRecipe;
+    GUI.setRoot("recipe_view");
   }
 }

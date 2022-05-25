@@ -1,6 +1,7 @@
 package com.sef.backend.services;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.*;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -8,7 +9,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Updates;
 import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
@@ -45,10 +45,44 @@ public class RecipeService implements IRecipeService {
 
       users.updateOne(
         eq("_id", userSession.userId),
-        Updates.addToSet("recipes", recipeToDocument(recipe))
+        addToSet("recipes", recipeToDocument(recipe))
       );
 
       recipes.insertOne(recipeToDocument(recipe));
+
+      return 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  @Override
+  public int updateRecipe(RecipeModel recipe) {
+    try {
+      MongoCollection<Document> users = mongoClient
+        .getDatabase("InternationalCuisine")
+        .getCollection("Users");
+
+      MongoCollection<Document> recipes = mongoClient
+        .getDatabase("InternationalCuisine")
+        .getCollection("Recipes");
+
+      users.updateOne(
+        eq("_id", userSession.userId),
+        addToSet("recipes", recipeToDocument(recipe))
+      );
+
+      recipes.updateOne(
+        eq("_id", recipe.getRecipeId()),
+        combine(
+          set("recipeName", recipe.getRecipeName()),
+          set("country", recipe.getCountry()),
+          set("description", recipe.getDescription()),
+          set("tags", recipe.getTags()),
+          set("image", recipe.getImage())
+        )
+      );
 
       return 0;
     } catch (Exception e) {
@@ -129,7 +163,7 @@ public class RecipeService implements IRecipeService {
 
   private static Document recipeToDocument(RecipeModel recipe) {
     return new Document()
-      .append("_id", new ObjectId())
+      .append("_id", recipe.getRecipeId())
       .append("recipeName", recipe.getRecipeName())
       .append("country", recipe.getCountry())
       .append("description", recipe.getDescription())
@@ -139,6 +173,7 @@ public class RecipeService implements IRecipeService {
 
   private static RecipeModel documentToRecipe(Document document) {
     return new RecipeModel(
+      document.get("_id", ObjectId.class),
       document.get("recipeName", String.class),
       document.get("country", String.class),
       document.get("description", String.class),

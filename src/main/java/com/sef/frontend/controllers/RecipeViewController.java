@@ -5,15 +5,19 @@ import com.sef.backend.models.RecipeModel;
 import com.sef.frontend.GUI;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import org.bson.types.ObjectId;
 
-public class RecipeViewController {
+public class RecipeViewController implements Initializable {
 
   private static final long _512KB = 512 * 1024;
 
@@ -35,6 +39,21 @@ public class RecipeViewController {
   private TextField tagsField;
 
   private String image = "";
+
+  static RecipeModel selectedRecipe;
+
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    if (selectedRecipe == null) {
+      return;
+    }
+
+    recipeNameField.setText(selectedRecipe.getRecipeName());
+    countryField.setText(selectedRecipe.getCountry());
+    descriptionField.setText(selectedRecipe.getDescription());
+    tagsField.setText(selectedRecipe.getTags());
+    image = selectedRecipe.getImage();
+  }
 
   @FXML
   public void handleSaveButtonAction() throws IOException {
@@ -59,9 +78,29 @@ public class RecipeViewController {
       return;
     }
 
-    recipeController.addRecipe(
-      new RecipeModel(recipeName, country, description, tags, image)
-    );
+    if (selectedRecipe == null) {
+      recipeController.addRecipe(
+        new RecipeModel(
+          new ObjectId(),
+          recipeName,
+          country,
+          description,
+          tags,
+          image
+        )
+      );
+    } else {
+      recipeController.updateRecipe(
+        new RecipeModel(
+          selectedRecipe.getRecipeId(),
+          recipeName,
+          country,
+          description,
+          tags,
+          image
+        )
+      );
+    }
 
     image = "";
     GUI.setRoot("main");

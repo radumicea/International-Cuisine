@@ -1,7 +1,10 @@
 package com.sef.backend.models;
 
+import org.bson.types.ObjectId;
+
 public class RecipeModel {
 
+  private ObjectId recipeId;
   private String recipeName;
   private String country;
   private String description;
@@ -9,17 +12,23 @@ public class RecipeModel {
   private String image;
 
   public RecipeModel(
+    ObjectId recipeId,
     String recipeName,
     String country,
     String description,
     String tags,
     String image
   ) {
+    this.recipeId = recipeId;
     this.recipeName = recipeName;
     this.description = description;
     this.country = country;
     this.tags = tags;
     this.image = image;
+  }
+
+  public ObjectId getRecipeId() {
+    return recipeId;
   }
 
   public String getRecipeName() {

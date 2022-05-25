@@ -14,6 +14,7 @@
          <children>
             <TableView fx:id="recipeTable" prefHeight="720.0" prefWidth="1121.0" style="-fx-background-color: #f6eef6;">
               <columns>
+                <TableColumn fx:id="recipeIdColumn" prefWidth="0.0" text="Recipe Id" />
                 <TableColumn fx:id="recipeNameColumn" prefWidth="125.0" text="Recipe Name" />
                 <TableColumn fx:id="countryColumn" prefWidth="75.0" text="Country" />
                   <TableColumn fx:id="descriptionColumn" prefWidth="480.0" text="Descritpion" />
@@ -37,6 +38,7 @@
                <font>
                   <Font size="23.0" />
                </font></Label>
+            <Button fx:id="close22" layoutX="1120.0" layoutY="39.0" mnemonicParsing="false" onAction="#handleEditRecipeButtonAction" prefHeight="39.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(from 0.0% 50.1577% to 100.0% 52.3659%, #b06489 0.0%, #b06489 11.1857%, #00000000 100.0%); -fx-border-color: ffffff;" text="Edit Recipe" textFill="WHITE" />
          </children>
       </AnchorPane>
    </top>

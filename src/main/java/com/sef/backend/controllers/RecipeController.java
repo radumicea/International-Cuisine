@@ -14,6 +14,10 @@ public class RecipeController {
     return recipeService.addRecipe(recipe);
   }
 
+  public int updateRecipe(RecipeModel recipe) {
+    return recipeService.updateRecipe(recipe);
+  }
+
   public List<RecipeModel> getFromToRecipes(int from, int to) {
     return recipeService.getFromToRecipes(from, to);
   }
