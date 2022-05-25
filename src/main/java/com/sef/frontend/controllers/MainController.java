@@ -29,7 +29,11 @@ public class MainController implements Initializable {
   private final RecipeController recipeController = new RecipeController();
   private final UserSession userSession = UserSession.getUserSession();
 
+  private boolean isFavorites;
   private boolean isGlobal;
+
+  private int favouritesFrom;
+  private int favouritesTo;
 
   private int globalFrom;
   private int globalTo;
@@ -109,8 +113,19 @@ public class MainController implements Initializable {
     initializeGlobal();
   }
 
+  private void initializeFavourites() {
+    isFavorites = true;
+
+    mainLabel.setText("FAVOURITE  RECIPES");
+
+    favouritesFrom = 0;
+    favouritesTo = ENTRIES_PAGE;
+    updateFavouritesTable();
+  }
+
   private void initializeGlobal() {
     isGlobal = true;
+    isFavorites = false;
 
     mainLabel.setText("GLOBAL  RECIPES");
 
@@ -121,12 +136,33 @@ public class MainController implements Initializable {
 
   private void initializeLocal() {
     isGlobal = false;
+    isFavorites = false;
 
     mainLabel.setText("MY  RECIPES");
 
     localFrom = 0;
     localTo = ENTRIES_PAGE;
     updateLocalTable();
+  }
+
+  private final void updateFavouritesTable()
+  {
+    List<RecipeModel> favouriteRecipes = recipeController.getFavouriteFromToRecipes(
+            userSession.userId,
+            favouritesFrom,
+            favouritesTo
+    );
+    if (favouriteRecipes == null) {
+      recipeTable.getItems().clear();
+      recipeTable.refresh();
+      return;
+    }
+    favouritesFrom = favouritesTo;
+    favouritesTo = favouritesFrom + ENTRIES_PAGE;
+
+    recipeTable.getItems().clear();
+    recipeTable.getItems().addAll(favouriteRecipes);
+    recipeTable.refresh();
   }
 
   private final void updateGlobalTable() {
@@ -168,10 +204,17 @@ public class MainController implements Initializable {
 
   @FXML
   public void handleNextButtonAction() {
-    if (isGlobal) {
-      updateGlobalTable();
-    } else {
-      updateLocalTable();
+    if (isFavorites)
+    {
+      updateFavouritesTable();
+    }
+    else
+    {
+      if (isGlobal) {
+        updateGlobalTable();
+      } else {
+        updateLocalTable();
+      }
     }
   }
 
@@ -191,6 +234,24 @@ public class MainController implements Initializable {
   public void handleHomeButtonAction() {
     recipeController.refresh();
     initializeGlobal();
+  }
+
+  @FXML
+  public void handleFavouritesButtonAction() {
+    recipeController.refresh();
+    initializeFavourites();
+  }
+
+  @FXML
+  public void handleAddFavouritesButtonAction() {
+    RecipeModel selectedRecipe = recipeTable
+            .getSelectionModel()
+            .getSelectedItem();
+
+    if (selectedRecipe == null) {
+      return;
+    }
+    recipeController.addFavouriteRecipe(selectedRecipe);
   }
 
   @FXML

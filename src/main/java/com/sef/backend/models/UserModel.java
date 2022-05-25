@@ -9,11 +9,13 @@ public class UserModel {
   public final String password;
   public final boolean isAdmin;
   public final List<RecipeModel> recipes;
+  public final List<RecipeModel> favourites;
 
   public UserModel(String username, String password, boolean isAdmin) {
     this.username = username;
     this.password = password;
     recipes = new ArrayList<>();
+    favourites = new ArrayList<>();
     this.isAdmin = isAdmin;
   }
 }
