@@ -62,6 +62,7 @@ public class RecipeService implements IRecipeService {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public int updateRecipe(RecipeModel recipe) {
     try {
@@ -72,24 +73,41 @@ public class RecipeService implements IRecipeService {
       MongoCollection<Document> recipes = mongoClient
         .getDatabase("InternationalCuisine")
         .getCollection("Recipes");
+      
+      Bson projectionFields = Projections.fields(
+        Projections.include("recipes")
+      );
+
+      Document user = users
+        .find(eq("_id", userSession.userId))
+        .projection(projectionFields)
+        .first();
+        
+      List<Document> userRecipeDocuments = user.get("recipes", List.class);
+
+      List<RecipeModel> userRecipes = new ArrayList<>();
+      for (Document doc : userRecipeDocuments) {
+        if (doc.get("_id", ObjectId.class).equals(recipe.getRecipeId())) {
+          continue;
+        }
+        userRecipes.add(documentToRecipe(doc));
+      }
+
+      userRecipeDocuments.clear();
+      userRecipeDocuments.add(recipeToDocument(recipe));
+      for (RecipeModel r : userRecipes) {
+        userRecipeDocuments.add(recipeToDocument(r));
+      }
 
       users.updateOne(
         eq("_id", userSession.userId),
-        addToSet("recipes", recipeToDocument(recipe))
+        set("recipes", userRecipeDocuments)
       );
 
-      recipes.updateOne(
-        eq("_id", recipe.getRecipeId()),
-        combine(
-          set("recipeName", recipe.getRecipeName()),
-          set("country", recipe.getCountry()),
-          set("description", recipe.getDescription()),
-          set("tags", recipe.getTags()),
-          set("image", recipe.getImage())
-        )
-      );
+      recipes.replaceOne(
+        eq("_id", recipe.getRecipeId()), recipeToDocument(recipe)
+        );
 
-      System.out.println("finished");
       return 0;
     } catch (Exception e) {
       e.printStackTrace();

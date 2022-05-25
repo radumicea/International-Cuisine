@@ -70,4 +70,29 @@ public class RecipeModel {
   public void setImage(String image) {
     this.image = image;
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((recipeId == null) ? 0 : recipeId.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RecipeModel other = (RecipeModel) obj;
+    if (recipeId == null) {
+      if (other.recipeId != null)
+        return false;
+    } else if (!recipeId.equals(other.recipeId))
+      return false;
+    return true;
+  }
 }
