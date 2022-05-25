@@ -7,8 +7,8 @@ public class UserController {
 
   private final IUserService userService = new UserService();
 
-  public int registerUser(String username, String password, boolean isAdmin) {
-    return userService.registerUser(username, password, isAdmin);
+  public int registerUser(String username, String password) {
+    return userService.registerUser(username, password);
   }
 
   public int logUserIn(String username, String password) {

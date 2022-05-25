@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Projections;
 import com.sef.backend.managers.HashManager;
+import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
 import org.bson.Document;
@@ -29,7 +30,7 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public int registerUser(String username, String password, boolean isAdmin) {
+  public int registerUser(String username, String password) {
     try {
       MongoCollection<Document> users = mongoClient
         .getDatabase("InternationalCuisine")
@@ -56,8 +57,8 @@ public class UserService implements IUserService {
           .append("_id", new ObjectId())
           .append("username", username)
           .append("password", hashManager.hashPassword(password))
-          .append("isAdmin", isAdmin)
-          .append("recipes", new ArrayList<Document>())
+          .append("isAdmin", false)
+          .append("recipes", new ArrayList<RecipeModel>())
       );
 
       return 0;
