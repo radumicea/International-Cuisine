@@ -41,6 +41,7 @@
             <Button fx:id="close22" layoutX="1120.0" layoutY="39.0" mnemonicParsing="false" onAction="#handleEditRecipeButtonAction" prefHeight="39.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(from 0.0% 50.1577% to 100.0% 52.3659%, #b06489 0.0%, #b06489 11.1857%, #00000000 100.0%); -fx-border-color: ffffff;" text="Edit Recipe" textFill="WHITE" />
             <Button fx:id="close221" layoutX="1200.0" layoutY="39.0" mnemonicParsing="false" onAction="#handleFavouritesButtonAction" prefHeight="39.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(from 0.0% 50.1577% to 100.0% 52.3659%, #b06489 0.0%, #b06489 11.1857%, #00000000 100.0%); -fx-border-color: ffffff;" text="Favourites" textFill="WHITE" />
             <Button fx:id="close2211" layoutX="1120.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleAddFavouritesButtonAction" prefHeight="39.0" prefWidth="160.0" style="-fx-background-color: linear-gradient(from 0.0% 50.1577% to 100.0% 52.3659%, #b06489 0.0%, #b06489 11.1857%, #00000000 100.0%); -fx-border-color: ffffff;" text="Add to Favourites" textFill="WHITE" />
+            <Button fx:id="close222" layoutX="1120.0" layoutY="640.0" mnemonicParsing="false" onAction="#handleReportRecipeButtonAction" prefHeight="39.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(from 0.0% 50.1577% to 100.0% 52.3659%, #b06489 0.0%, #b06489 11.1857%, #00000000 100.0%); -fx-border-color: ffffff;" text="Report" textFill="WHITE" />
          </children>
       </AnchorPane>
    </top>

@@ -271,4 +271,18 @@ public class MainController implements Initializable {
     RecipeViewController.selectedRecipe = selectedRecipe;
     GUI.setRoot("recipe_view");
   }
+
+  @FXML
+  public void handleReportRecipeButtonAction() throws IOException {
+    RecipeModel selectedRecipe = recipeTable
+            .getSelectionModel()
+            .getSelectedItem();
+
+    if (selectedRecipe == null) {
+      return;
+    }
+
+    ReportViewController.selectedRecipe = selectedRecipe;
+    GUI.setRoot("reportView");
+  }
 }
