@@ -1,6 +1,7 @@
 package com.sef.backend.services;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.*;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -8,7 +9,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.PushOptions;
 import com.sef.backend.models.RecipeModel;
 import com.sef.session.UserSession;
 import java.util.ArrayList;
@@ -43,12 +44,69 @@ public class RecipeService implements IRecipeService {
         .getDatabase("InternationalCuisine")
         .getCollection("Recipes");
 
+      PushOptions pushOptions = new PushOptions();
+      List<Document> list = new ArrayList<>();
+      list.add(recipeToDocument(recipe));
+
       users.updateOne(
         eq("_id", userSession.userId),
-        Updates.addToSet("recipes", recipeToDocument(recipe))
+        pushEach("recipes", list, pushOptions.position(0))
       );
 
       recipes.insertOne(recipeToDocument(recipe));
+
+      return 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public int updateRecipe(RecipeModel recipe) {
+    try {
+      MongoCollection<Document> users = mongoClient
+        .getDatabase("InternationalCuisine")
+        .getCollection("Users");
+
+      MongoCollection<Document> recipes = mongoClient
+        .getDatabase("InternationalCuisine")
+        .getCollection("Recipes");
+      
+      Bson projectionFields = Projections.fields(
+        Projections.include("recipes")
+      );
+
+      Document user = users
+        .find(eq("_id", userSession.userId))
+        .projection(projectionFields)
+        .first();
+        
+      List<Document> userRecipeDocuments = user.get("recipes", List.class);
+
+      List<RecipeModel> userRecipes = new ArrayList<>();
+      for (Document doc : userRecipeDocuments) {
+        if (doc.get("_id", ObjectId.class).equals(recipe.getRecipeId())) {
+          continue;
+        }
+        userRecipes.add(documentToRecipe(doc));
+      }
+
+      userRecipeDocuments.clear();
+      userRecipeDocuments.add(recipeToDocument(recipe));
+      for (RecipeModel r : userRecipes) {
+        userRecipeDocuments.add(recipeToDocument(r));
+      }
+
+      users.updateOne(
+        eq("_id", userSession.userId),
+        set("recipes", userRecipeDocuments)
+      );
+
+      recipes.replaceOne(
+        eq("_id", recipe.getRecipeId()), recipeToDocument(recipe)
+        );
 
       return 0;
     } catch (Exception e) {
@@ -129,7 +187,7 @@ public class RecipeService implements IRecipeService {
 
   private static Document recipeToDocument(RecipeModel recipe) {
     return new Document()
-      .append("_id", new ObjectId())
+      .append("_id", recipe.getRecipeId())
       .append("recipeName", recipe.getRecipeName())
       .append("country", recipe.getCountry())
       .append("description", recipe.getDescription())
@@ -139,6 +197,7 @@ public class RecipeService implements IRecipeService {
 
   private static RecipeModel documentToRecipe(Document document) {
     return new RecipeModel(
+      document.get("_id", ObjectId.class),
       document.get("recipeName", String.class),
       document.get("country", String.class),
       document.get("description", String.class),
