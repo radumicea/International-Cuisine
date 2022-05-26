@@ -12,4 +12,5 @@ module com.sef {
   opens com.sef.backend.models to com.fasterxml.jackson.databind, javafx.base;
 
   exports com.sef ;
+    opens com.sef.backend.controllers to javafx.fxml;
 }
